@@ -409,9 +409,14 @@ public class WebCrawler implements Runnable {
                                  EnglishReasonPhraseCatalog.INSTANCE.getReason(statusCode,
                                                                                Locale.ENGLISH));
 
+            final String contentType = fetchResult.getEntity() == null ? "" :
+                fetchResult.getEntity().getContentType() == null ? "" :
+                    fetchResult.getEntity().getContentType().getValue();
+
             page.setTimeToFirstByte(fetchResult.getTimeToFirstByte());
             page.setFetchResponseHeaders(fetchResult.getResponseHeaders());
             page.setStatusCode(statusCode);
+            page.setContentType(contentType);
 
             if (statusCode < 200 ||
                 statusCode > 299) { // Not 2XX: 2XX status codes indicate success
@@ -467,9 +472,6 @@ public class WebCrawler implements Runnable {
                         EnglishReasonPhraseCatalog.INSTANCE.getReason(fetchResult.getStatusCode(),
                                                                       Locale.ENGLISH); // Finds
                     // the status reason for all known statuses
-                    String contentType = fetchResult.getEntity() == null ? "" :
-                                         fetchResult.getEntity().getContentType() == null ? "" :
-                                         fetchResult.getEntity().getContentType().getValue();
                     onUnexpectedStatusCode(curURL, fetchResult.getStatusCode(), contentType,
                         description);
                 }
